@@ -79,11 +79,19 @@ void MatrixA(double** a, int n, double eps)
 
 double ElementMatrixA(int i, int j, double eps)
 {
+	double pi = 3.1415926535;
 	double el = 0;
 	if (i == j)
 		el = i + j;
 	else
+	{
+		double k = 2 * i, l = 2 * j;
+		while (k > pi) k -= 2 * pi;
+		while (l > pi) l -= 2 * pi;
+		while (k < -pi) k += 2 * pi;
+		while (l < -pi) l += 2 * pi;
 		el = (2 * Cosinus(2 * i, eps) - Sinus(2 * j, eps)) / ((i + 1)*(i + 1));
+	}
 	return el;
 }
 
@@ -110,13 +118,13 @@ void DisplayMatrix(double** a, int n)
 double Cosinus(double a, double eps)
 {
 	int m = 1;
-	double sum = 1;
-	double yNext = (-1 * a * a) / (m * (m + 1));
+	double sum = 0.0;
+	double yNext = 1.0;
 	while (fabs(yNext) >= eps)
 	{
-		m += 2;
 		sum += yNext;
-		yNext *= (-1 * a * a) / (m * (m + 1));
+		yNext *= (-1.0 * a * a) / ((2*m -1)*(2*m));
+		m+=1;
 	}
 	return sum;
 }
@@ -124,12 +132,12 @@ double Cosinus(double a, double eps)
 double Sinus(double a, double eps)
 {
 	int m = 1;
-	double sum = a;
-	double yNext = a*a*a / 6;
+	double sum = 0;
+	double yNext = a;
 	while (fabs(yNext) >= eps)
 	{
 		sum += yNext;
-		yNext *= a*a / ((2 * m)*(2 * m + 1));
+		yNext *= -1.0*a*a / ((2 * m)*(2 * m + 1));
 		m++;
 	}
 	return sum;
